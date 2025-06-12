@@ -1,0 +1,368 @@
+package com.example.finaltev3_juanmiguel
+
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+
+class MainActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
+            Surface(
+                modifier = Modifier.fillMaxSize(),
+                color = MaterialTheme.colorScheme.background
+            ) {
+                Principal()
+            }
+        }
+    }
+}
+
+@Composable
+fun Principal() {
+    Scaffold { paddingValues ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Superior()
+            Spacer(modifier = Modifier.height(16.dp))
+            MiSlider()
+            Spacer(modifier = Modifier.height(16.dp))
+            BarraProgreso()
+        }
+    }
+}
+
+@Preview
+@Composable
+fun MiSlider() {
+    val range = 0f..5f // CORREGIDO: 0-5.0
+    var fontSize by remember { mutableStateOf(2.5f) }
+    
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.padding(16.dp)
+    ) {
+        Box(contentAlignment = Alignment.Center, modifier = Modifier.height(100.dp)) {
+            Text(text = "Hola mundo", fontSize = (fontSize * 10).sp) // Escalado para visualizar
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Slider(
+                value = fontSize,
+                valueRange = range,
+                onValueChange = { fontSize = it },
+                modifier = Modifier
+                    .weight(0.9f)
+                    .padding(end = 16.dp)
+            )
+            Text(
+                text = fontSize.toInt().toString(), // NÚMEROS ENTEROS
+                modifier = Modifier.weight(0.1f)
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun Superior() {
+    var mostrarMenu by remember { mutableStateOf(false) }
+    var mostrarSubMenu by remember { mutableStateOf<String?>(null) }
+    var contadorNotificaciones by remember { mutableStateOf(0) }
+    var opcionElegida by remember { mutableStateOf("Ninguna opción seleccionada") } // NUEVO
+    
+    Column(modifier = Modifier.padding(16.dp)) {
+        CenterAlignedTopAppBar(
+            title = {
+                Text(
+                    text = "juanmiguel", // CORREGIDO: TU NOMBRE
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp
+                )
+            },
+            navigationIcon = {
+                Box {
+                    IconButton(onClick = { mostrarMenu = true }) {
+                        Icon(Icons.Default.Menu, "Menú")
+                    }
+                    DropdownMenu(
+                        expanded = mostrarMenu,
+                        onDismissRequest = {
+                            mostrarMenu = false
+                            mostrarSubMenu = null
+                        }
+                    ) {
+                        DropdownMenuItem(
+                            text = { Text("CF Grado Superior") },
+                            onClick = { mostrarSubMenu = "superior" },
+                            leadingIcon = { Icon(Icons.Default.Star, null) }, // CAMBIADO
+                            trailingIcon = { Icon(Icons.Default.KeyboardArrowRight, null) } // CAMBIADO
+                        )
+                        if (mostrarSubMenu == "superior") {
+                            DropdownMenu(
+                                expanded = true,
+                                onDismissRequest = { mostrarSubMenu = null }
+                            ) {
+                                DropdownMenuItem(
+                                    text = { Text("DAM") },
+                                    onClick = { 
+                                        opcionElegida = "CF Grado Superior - DAM"
+                                        mostrarMenu = false
+                                        mostrarSubMenu = null
+                                    }
+                                )
+                                DropdownMenuItem(
+                                    text = { Text("DAW") },
+                                    onClick = { 
+                                        opcionElegida = "CF Grado Superior - DAW"
+                                        mostrarMenu = false
+                                        mostrarSubMenu = null
+                                    }
+                                )
+                                DropdownMenuItem(
+                                    text = { Text("ASIR") },
+                                    onClick = { 
+                                        opcionElegida = "CF Grado Superior - ASIR"
+                                        mostrarMenu = false
+                                        mostrarSubMenu = null
+                                    }
+                                )
+                            }
+                        }
+                        DropdownMenuItem(
+                            text = { Text("CF Grado Medio") },
+                            onClick = { mostrarSubMenu = "medio" },
+                            leadingIcon = { Icon(Icons.Default.Star, null) },
+                            trailingIcon = { Icon(Icons.Default.KeyboardArrowRight, null) }
+                        )
+                        if (mostrarSubMenu == "medio") {
+                            DropdownMenu(
+                                expanded = true,
+                                onDismissRequest = { mostrarSubMenu = null }
+                            ) {
+                                DropdownMenuItem(
+                                    text = { Text("SMR") },
+                                    onClick = { 
+                                        opcionElegida = "CF Grado Medio - SMR"
+                                        mostrarMenu = false
+                                        mostrarSubMenu = null
+                                    }
+                                )
+                            }
+                        }
+                        DropdownMenuItem(
+                            text = { Text("CF Grado Básica") },
+                            onClick = { mostrarSubMenu = "basico" },
+                            leadingIcon = { Icon(Icons.Default.Star, null) },
+                            trailingIcon = { Icon(Icons.Default.KeyboardArrowRight, null) }
+                        )
+                        if (mostrarSubMenu == "basico") {
+                            DropdownMenu(
+                                expanded = true,
+                                onDismissRequest = { mostrarSubMenu = null }
+                            ) {
+                                DropdownMenuItem(
+                                    text = { Text("Informatica de oficina") },
+                                    onClick = { 
+                                        opcionElegida = "CF Grado Básica - Informática de oficina"
+                                        mostrarMenu = false
+                                        mostrarSubMenu = null
+                                    }
+                                )
+                                DropdownMenuItem(
+                                    text = { Text("Informatica y comunicaciones") },
+                                    onClick = { 
+                                        opcionElegida = "CF Grado Básica - Informática y comunicaciones"
+                                        mostrarMenu = false
+                                        mostrarSubMenu = null
+                                    }
+                                )
+                            }
+                        }
+                        DropdownMenuItem(
+                            text = { Text("Cursos de cualificacion") },
+                            onClick = { mostrarSubMenu = "cursos" },
+                            leadingIcon = { Icon(Icons.Default.Star, null) },
+                            trailingIcon = { Icon(Icons.Default.KeyboardArrowRight, null) }
+                        )
+                        if (mostrarSubMenu == "cursos") {
+                            DropdownMenu(
+                                expanded = true,
+                                onDismissRequest = { mostrarSubMenu = null }
+                            ) {
+                                DropdownMenuItem(
+                                    text = { Text("Videojuegos y realidad virtual") },
+                                    onClick = { 
+                                        opcionElegida = "Cursos - Videojuegos y realidad virtual"
+                                        mostrarMenu = false
+                                        mostrarSubMenu = null
+                                    }
+                                )
+                                DropdownMenuItem(
+                                    text = { Text("Ciberseguridad") },
+                                    onClick = { 
+                                        opcionElegida = "Cursos - Ciberseguridad"
+                                        mostrarMenu = false
+                                        mostrarSubMenu = null
+                                    }
+                                )
+                                DropdownMenuItem(
+                                    text = { Text("Inteligencia artificial y big data") },
+                                    onClick = { 
+                                        opcionElegida = "Cursos - Inteligencia artificial y big data"
+                                        mostrarMenu = false
+                                        mostrarSubMenu = null
+                                    }
+                                )
+                            }
+                        }
+                    }
+                }
+            },
+            actions = {
+                IconButton(onClick = { }) {
+                    BadgedBox(
+                        badge = {
+                            Badge { Text(contadorNotificaciones.toString()) }
+                        }
+                    ) {
+                        Icon(Icons.Default.ShoppingCart, "Carrito")
+                    }
+                }
+            }
+        )
+        
+        Spacer(modifier = Modifier.height(8.dp))
+        
+        Button(
+            onClick = { contadorNotificaciones++ },
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50)),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(48.dp)
+        ) {
+            Text("Comprar")
+        }
+        
+        Spacer(modifier = Modifier.height(16.dp))
+        
+        // NUEVO: Text que muestra la opción elegida
+        Text(
+            text = "Selección: $opcionElegida",
+            modifier = Modifier.padding(8.dp),
+            fontWeight = FontWeight.Medium
+        )
+    }
+}
+
+@Composable
+fun BarraProgreso() {
+    var progreso by remember { mutableStateOf(0.3f) }
+    var mostrarProgresoCircular by remember { mutableStateOf(false) }
+    var mostrarProgresoLineal by remember { mutableStateOf(false) }
+    
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        LinearProgressIndicator(
+            progress = progreso,
+            modifier = Modifier.fillMaxWidth(),
+            color = Color.Red // COLORES DISTINTOS
+        )
+        
+        CircularProgressIndicator(
+            progress = progreso,
+            modifier = Modifier.size(60.dp),
+            color = Color.Cyan // COLORES DISTINTOS
+        )
+        
+        if (mostrarProgresoCircular) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(60.dp),
+                color = Color(0xFFE91E63) // ROSA como pide el enunciado
+            )
+        }
+        
+        if (mostrarProgresoLineal) {
+            LinearProgressIndicator(
+                modifier = Modifier.fillMaxWidth(),
+                color = Color.Blue, // AZUL sobre fondo verde
+                trackColor = Color.Green // FONDO VERDE
+            )
+        }
+        
+        Row(
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Button(
+                onClick = {
+                    progreso = (progreso + 0.1f).coerceIn(0f, 1f) // CONTROLES EXTREMOS
+                },
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF9C27B0))
+            ) {
+                Text("Incrementar")
+            }
+            Button(
+                onClick = {
+                    progreso = (progreso - 0.1f).coerceIn(0f, 1f) // CONTROLES EXTREMOS
+                },
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF5722))
+            ) {
+                Text("Decrementar")
+            }
+        }
+        
+        Row(
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Button(
+                onClick = { mostrarProgresoCircular = !mostrarProgresoCircular },
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF607D8B))
+            ) {
+                Text("Encendiendo") // CORREGIDO
+            }
+            Button(
+                onClick = { mostrarProgresoLineal = !mostrarProgresoLineal },
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF795548))
+            ) {
+                Text("Enviando") // CORREGIDO
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DefaultPreview() {
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.background
+    ) {
+        Principal()
+    }
+}
