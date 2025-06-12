@@ -1,0 +1,5 @@
+es por esto 
+
+añade esta dependencia y sincroniza 
+
+implementation("androidx.compose.material:material-icons-extended:1.5.4")
